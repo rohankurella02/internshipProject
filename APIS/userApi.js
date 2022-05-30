@@ -51,7 +51,7 @@ userApp.post(
     let userCredObj = request.body;
     //seacrh for user by username
     let userOfDB = await userCollectionObject.findOne({
-      username: userCredObj.username,
+      Name: userCredObj.Name,
     });
     //if username not existed
     if (userOfDB == null) {
@@ -61,8 +61,8 @@ userApp.post(
     else {
       //compare passwords
       let status = await bcryptjs.compare(
-        userCredObj.password,
-        userOfDB.password
+        userCredObj.Password,
+        userOfDB.Password
       );
       //if passwords not matched
       if (status == false) {
@@ -72,7 +72,7 @@ userApp.post(
       else {
         //create token
         let token = jwt.sign(
-          { username: userOfDB.username },
+          { Name: userOfDB.Name },
           process.env.SECRET_KEY,
           { expiresIn: 300 }
         );
@@ -99,7 +99,7 @@ userApp.post(
       let newUserObj = JSON.parse(request.body.data);
       //seacrh for user by username
       let userOfDB = await userCollectionObject.findOne({
-        username: newUserObj.username,
+        Name: newUserObj.Name,
       });
       //if user existed
       if (userOfDB !== null) {
@@ -110,12 +110,12 @@ userApp.post(
       //if user not existed
       else {
         //hash password
-        let hashedPassword = await bcryptjs.hash(newUserObj.password, 6);
+        let hashedPassword = await bcryptjs.hash(newUserObj.Password, 6);
         //replace plain password with hashed password in newUserObj
-        newUserObj.password = hashedPassword;
+        newUserObj.Password = hashedPassword;
         //add profile image link to newUserObj
         newUserObj.profileImg=request.file.path;
-        //removw photo property
+        //remove photo property
         delete newUserObj.photo;
         //insert newUser
         await userCollectionObject.insertOne(newUserObj);

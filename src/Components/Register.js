@@ -21,10 +21,9 @@ function Register() {
         console.log(data)
         console.log(data.photo.length)
         let formData=new FormData();
-        formData.append("userObj",JSON.stringify(data));
+        formData.append("data",JSON.stringify(data));
         formData.append("photo",img);
-        let token=localStorage.getItems("token");
-        axios.post("http://localhost:4000/user-api/post-user",{headers:{Authorization:"Bearer"+token}},formData)
+        axios.post("http://localhost:4000/user-api/post-user",formData)
         .then((response)=>{
             alert((response.data.message));
             if(response.data.message==="New user created"){

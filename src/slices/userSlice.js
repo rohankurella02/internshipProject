@@ -2,18 +2,18 @@ import {createSlice,createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 
 //make HTTP POST req to login user
-export const userLogin=createAsyncThunk('loginuser',async(userCredentialsObject,thunkApi)=>{
+export const userLogin=createAsyncThunk('loginuser',async(data,thunkApi)=>{
 
-    let response=await axios.post('/user-api/login',userCredentialsObject);
-    let data=response.data;
-    if(data.message==='success'){
+    let response=await axios.post('/user-api/login',data);
+    // let data=response.data;
+    if(response.data.message==='success'){
       //store token in local storage
-      localStorage.setItem("token",data.payload);
-      return data.userObj;
+      localStorage.setItem("token",response.data.payload);
+      return response.data.userObj;
 
     }
-    if(data.message==='Invalid user' || data.message==='Invalid password'){
-      return thunkApi.rejectWithValue(data)
+    if(response.data.message==='Invalid user' || response.data.message==='Invalid password'){
+      return thunkApi.rejectWithValue(response.data)
     }
 
 })
